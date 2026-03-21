@@ -1,0 +1,22 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center; /* ngang */
+    align-items: center;     /* dọc */
+    background: black;
+}
+
+h1 {
+    color: white;
+    font-size: 80px;
+    text-align: center;
+    word-break: break-word;
+}
+
+/* 📱 Khi màn hình nhỏ (điện thoại) */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 50px;
+    }
+}
