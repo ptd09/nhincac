@@ -1,9 +1,10 @@
+/*
 body {
     margin: 0;
     height: 100vh;
     display: flex;
-    justify-content: center; /* ngang */
-    align-items: center;     /* dọc */
+    justify-content: center; 
+    align-items: center;     
     background: black;
 }
 
@@ -14,9 +15,9 @@ h1 {
     word-break: break-word;
 }
 
-/* 📱 Khi màn hình nhỏ (điện thoại) */
 @media (max-width: 600px) {
     h1 {
         font-size: 50px;
     }
 }
+*/
