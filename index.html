@@ -40,15 +40,14 @@
         <span>不支持canvas浏览器</span>
     </canvas>
 </div>
-    <button id="btn">CONFIG</button>
-    <div id="config">
-        <textarea name="" id="kernel" cols="30" rows="10"></textarea>
-        <br />
-        <button id="apply">APPLY</button>
-        <button id="cancle">CANCLE</button>
-    </div>
-    <script>
-alert("trigonometric and inverse trigonometric functions test.\ncreated by cznull@bilibili");
+<button id="btn">CONFIG</button>
+<div id="config">
+    <textarea name="" id="kernel" cols="30" rows="10"></textarea>
+    <br />
+    <button id="apply">APPLY</button>
+    <button id="cancle">CANCLE</button>
+</div>
+<script>
     var cx, cy;
     var glposition;
     var glright;
@@ -71,23 +70,23 @@ alert("trigonometric and inverse trigonometric functions test.\ncreated by cznul
     var cenx = 0.0;
     var ceny = 0.0;
     var cenz = 0.0;
-        var KERNEL = "float kernal(vec3 ver){\n" +
-            "   vec3 a;\n" +
-            "float b,c,d,e;\n" +
-            "   a=ver;\n" +
-            "   for(int i=0;i<5;i++){\n" +
-            "       b=length(a);\n" +
-            "       c=atan(a.y,a.x)*8.0;\n" +
-            "       e=1.0/b;\n" +
-            "       d=acos(a.z/b)*8.0;\n" +
-            "       b=pow(b,8.0);\n" +
-            "       a=vec3(b*sin(d)*cos(c),b*sin(d)*sin(c),b*cos(d))+ver;\n" +
-            "       if(b>6.0){\n" +
-            "           break;\n" +
-            "       }\n" +
-            "   }" +
-            "   return 4.0-a.x*a.x-a.y*a.y-a.z*a.z;" +
-            "}";
+    var KERNEL = "float kernal(vec3 ver){\n" +
+        "   vec3 a;\n" +
+        "float b,c,d,e;\n" +
+        "   a=ver;\n" +
+        "   for(int i=0;i<5;i++){\n" +
+        "       b=length(a);\n" +
+        "       c=atan(a.y,a.x)*8.0;\n" +
+        "       e=1.0/b;\n" +
+        "       d=acos(a.z/b)*8.0;\n" +
+        "       b=pow(b,8.0);\n" +
+        "       a=vec3(b*sin(d)*cos(c),b*sin(d)*sin(c),b*cos(d))+ver;\n" +
+        "       if(b>6.0){\n" +
+        "           break;\n" +
+        "       }\n" +
+        "   }" +
+        "   return 4.0-a.x*a.x-a.y*a.y-a.z*a.z;" +
+        "}";
     var vertshade;
     var fragshader;
     var shaderProgram;
@@ -124,25 +123,25 @@ alert("trigonometric and inverse trigonometric functions test.\ncreated by cznul
         false);
     document.addEventListener("mousemove",
         function (ev) {
-        var oEvent = ev || event;
-        if (ml == 1) {
-            ang1 += (oEvent.clientX - mx) * 0.002;
-            ang2 += (oEvent.clientY - my) * 0.002;
-            if (oEvent.clientX != mx || oEvent.clientY != my) {
-                mm = 1;
+            var oEvent = ev || event;
+            if (ml == 1) {
+                ang1 += (oEvent.clientX - mx) * 0.002;
+                ang2 += (oEvent.clientY - my) * 0.002;
+                if (oEvent.clientX != mx || oEvent.clientY != my) {
+                    mm = 1;
+                }
             }
-        }
-        if (mr == 1) {
-            var l = len * 4.0 / (cx + cy);
-            cenx += l * (-(oEvent.clientX - mx) * Math.sin(ang1) - (oEvent.clientY - my) * Math.sin(ang2) * Math.cos(ang1));
-            ceny += l * ((oEvent.clientY - my) * Math.cos(ang2));
-            cenz += l * ((oEvent.clientX - mx) * Math.cos(ang1) - (oEvent.clientY - my) * Math.sin(ang2) * Math.sin(ang1));
-            if (oEvent.clientX != mx || oEvent.clientY != my) {
-                mm = 1;
+            if (mr == 1) {
+                var l = len * 4.0 / (cx + cy);
+                cenx += l * (-(oEvent.clientX - mx) * Math.sin(ang1) - (oEvent.clientY - my) * Math.sin(ang2) * Math.cos(ang1));
+                ceny += l * ((oEvent.clientY - my) * Math.cos(ang2));
+                cenz += l * ((oEvent.clientX - mx) * Math.cos(ang1) - (oEvent.clientY - my) * Math.sin(ang2) * Math.sin(ang1));
+                if (oEvent.clientX != mx || oEvent.clientY != my) {
+                    mm = 1;
+                }
             }
-        }
-        mx = oEvent.clientX;
-        my = oEvent.clientY;
+            mx = oEvent.clientX;
+            my = oEvent.clientY;
         },
         false);
     document.addEventListener("mousewheel",
@@ -404,7 +403,7 @@ alert("trigonometric and inverse trigonometric functions test.\ncreated by cznul
             "   }\n" +
             "   if (sign==1) {\n" +
             "      ver = origin + dir*r3 ;\n" +
-                "       r1=ver.x*ver.x+ver.y*ver.y+ver.z*ver.z;" +
+            "       r1=ver.x*ver.x+ver.y*ver.y+ver.z*ver.z;" +
             "      n.x = kernal(ver - right * (r3*0.00025)) - kernal(ver + right * (r3*0.00025));\n" +
             "      n.y = kernal(ver - up * (r3*0.00025)) - kernal(ver + up * (r3*0.00025));\n" +
             "      n.z = kernal(ver + forward * (r3*0.00025)) - kernal(ver - forward * (r3*0.00025));\n" +
@@ -419,9 +418,9 @@ alert("trigonometric and inverse trigonometric functions test.\ncreated by cznul
             "      r3 = max(0.0,r3);\n" +
             "      r3 = r3 * r3*r3*r3;\n" +
             "      r3 = r3 * 0.45 + r4 * 0.25 + 0.3;\n" +
-                "      n.x = sin(r1*10.0)*0.5+0.5;\n" +
-                "      n.y = sin(r1*10.0+2.05)*0.5+0.5;\n" +
-                "      n.z = sin(r1*10.0-2.05)*0.5+0.5;\n" +
+            "      n.x = sin(r1*10.0)*0.5+0.5;\n" +
+            "      n.y = sin(r1*10.0+2.05)*0.5+0.5;\n" +
+            "      n.z = sin(r1*10.0-2.05)*0.5+0.5;\n" +
             "      color = n*r3;\n" +
             "   }\n" +
             "   gl_FragColor = vec4(color.x, color.y, color.z, 1.0);" +
@@ -492,6 +491,6 @@ alert("trigonometric and inverse trigonometric functions test.\ncreated by cznul
             document.getElementById("kernel").value = KERNEL;
         });
     }
-    </script>
+</script>
 </body>
 </html>
