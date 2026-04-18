@@ -1,11 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Rainbow Text</title>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #111;
+        }
+
+        h1 {
+            font-size: 70px;
+            font-weight: 900;
+            text-align: center;
+
+            /* Hiệu ứng cầu vồng */
+            background: linear-gradient(
+                270deg,
+                red,
+                orange,
+                yellow,
+                green,
+                cyan,
+                blue,
+                violet,
+                red
+            );
+
+            background-size: 1400% 1400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            animation: rainbow 6s ease infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
 </head>
+
 <body>
-    <strong><h1>Bảo Nam yêu Khánh Linh 7/7</h1></strong>
+    <h1>Bảo Nam yêu Bảo Trân 2k12</h1>
 </body>
 </html>
